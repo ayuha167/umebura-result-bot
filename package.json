@@ -1,0 +1,26 @@
+{
+  "name": "umebura-result-bot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Discord bot that returns Umebura SP12 placements from start.gg",
+  "scripts": {
+    "register": "node src/register-commands.js",
+    "refresh-standings": "node src/refresh-standings.js",
+    "preview-result": "node src/preview-result.js",
+    "start": "node src/index.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "discord.js": "^14.26.5",
+    "dotenv": "^17.2.3",
+    "openai": "^6.47.0",
+    "sharp": "^0.35.3"
+  },
+  "overrides": {
+    "undici": "6.27.0"
+  }
+}

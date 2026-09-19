@@ -1,0 +1,9 @@
+node_modules/
+.env
+*.log
+.DS_Store
+data/standings.json
+data/standings.json.tmp
+data/bot-settings.json
+data/bot-settings.json.tmp
+preview/
