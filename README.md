@@ -43,6 +43,8 @@ npm run preview-result -- 13
 しないでください。
 
 背景画像を追加する場合は `assets/result-images` に配置してください。
+文字フォントは `RESULT_FONT_FILE` で指定したTTFファイルを使って描画します。
+Railwayではリポジトリ内の `assets/GenEiNuGothic-EB.ttf` を指定してください。
 
 ## Discordでの使い方
 

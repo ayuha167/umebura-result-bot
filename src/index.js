@@ -77,6 +77,7 @@ async function handleResult(interaction) {
       placement: result.placement,
       playerName: result.playerName,
       backgroundPath: background.backgroundPath,
+      fontFile: config.resultFontFile,
       staticOverlayPath: background.useStaticOverlay
         ? config.resultStaticOverlayFile
         : null,

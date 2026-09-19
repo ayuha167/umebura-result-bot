@@ -1,4 +1,5 @@
 import sharp from 'sharp';
+import { Resvg } from '@resvg/resvg-js';
 import { readdir } from 'node:fs/promises';
 import { extname, join } from 'node:path';
 
@@ -6,6 +7,20 @@ const WIDTH = 1920;
 const HEIGHT = 1080;
 const FONT_FAMILY = 'GenEi Nu Gothic EB';
 const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp']);
+
+function renderSvg(svg, fontFile) {
+  const font = fontFile
+    ? {
+        fontFiles: [fontFile],
+        loadSystemFonts: false,
+        defaultFontFamily: FONT_FAMILY,
+      }
+    : { loadSystemFonts: true, defaultFontFamily: FONT_FAMILY };
+
+  return Buffer.from(
+    new Resvg(svg, { font }).render().asPng(),
+  );
+}
 
 export async function pickRandomBackground({ directory, fallbackPath }) {
   try {
@@ -72,11 +87,12 @@ export async function generateResultImage({
   placement,
   playerName,
   backgroundPath,
+  fontFile = null,
   staticOverlayPath = null,
 }) {
   const displayName = escapeXml(formatPlayerName(playerName));
   const resultText = `${formatOrdinal(placement)} place`;
-  const playerNameOverlay = Buffer.from(`
+  const playerNameSvg = `
     <svg width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}"
          xmlns="http://www.w3.org/2000/svg">
       <g transform="translate(1826 0) scale(1.05 1)">
@@ -85,8 +101,8 @@ export async function generateResultImage({
               fill="#d4d4d4" fill-opacity="0.73">${displayName}</text>
       </g>
     </svg>
-  `);
-  const placementOverlay = Buffer.from(`
+  `;
+  const placementSvg = `
     <svg width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}"
          xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -101,7 +117,11 @@ export async function generateResultImage({
               fill="url(#text-gradient)">${resultText}</text>
       </g>
     </svg>
-  `);
+  `;
+  const [playerNameOverlay, placementOverlay] = await Promise.all([
+    renderSvg(playerNameSvg, fontFile),
+    renderSvg(placementSvg, fontFile),
+  ]);
 
   const background = sharp(backgroundPath).rotate().resize(WIDTH, HEIGHT, {
     fit: 'cover',

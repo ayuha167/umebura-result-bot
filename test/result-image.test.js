@@ -11,6 +11,9 @@ import {
 const backgroundPath = fileURLToPath(
   new URL('../assets/YourResults01.png', import.meta.url),
 );
+const fontFile = fileURLToPath(
+  new URL('../assets/GenEiNuGothic-EB.ttf', import.meta.url),
+);
 
 test('英語の順序数を正しく作る', () => {
   assert.equal(formatOrdinal(1), '1st');
@@ -33,6 +36,7 @@ test('1920 x 1080 pxのPNG順位画像を生成する', async () => {
     placement: 13,
     playerName: 'Abadango',
     backgroundPath,
+    fontFile,
   });
   const metadata = await sharp(image).metadata();
 

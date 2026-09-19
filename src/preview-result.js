@@ -20,6 +20,7 @@ const image = await generateResultImage({
   placement,
   playerName,
   backgroundPath: background.backgroundPath,
+  fontFile: config.resultFontFile,
   staticOverlayPath: background.useStaticOverlay
     ? config.resultStaticOverlayFile
     : null,

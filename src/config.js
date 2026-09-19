@@ -41,6 +41,9 @@ export function loadConfig(env = process.env) {
       env.RESULT_STATIC_OVERLAY_FILE?.trim() ||
         'assets/YourResults01-overlay.png',
     ),
+    resultFontFile: resolve(
+      env.RESULT_FONT_FILE?.trim() || 'assets/GenEiNuGothic-EB.ttf',
+    ),
     botSettingsFile: resolve(
       env.BOT_SETTINGS_FILE?.trim() || 'data/bot-settings.json',
     ),
