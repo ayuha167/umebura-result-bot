@@ -7,6 +7,38 @@ const WIDTH = 1920;
 const HEIGHT = 1080;
 const FONT_FAMILY = 'GenEi Nu Gothic EB';
 const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp']);
+const PLAYER_NAME_FONT_SIZE = 288;
+const LONG_PLAYER_NAME_FONT_SIZE = Number((PLAYER_NAME_FONT_SIZE * 0.6).toFixed(1));
+// Keep the long-name detection available for a future layout change, but use
+// the same font size for every player name for now.
+const REDUCE_LONG_PLAYER_NAME = false;
+// The name is right-aligned near x=1826. This threshold leaves the usual
+// names at the normal size while catching names that would visibly overflow.
+const PLAYER_NAME_WIDTH_THRESHOLD = 7.2;
+
+function estimatedPlayerNameWidth(value) {
+  return [...value].reduce((width, character) => {
+    if (/\p{Script=Han}|\p{Script=Hiragana}|\p{Script=Katakana}/u.test(character)) {
+      return width + 1;
+    }
+    if (/[A-Z]/.test(character)) return width + 0.86;
+    if (/[a-z]/.test(character)) return width + 0.7;
+    if (/[0-9]/.test(character)) return width + 0.8;
+    return width + 0.55;
+  }, 0);
+}
+
+export function isLongPlayerName(value) {
+  const playerName = formatPlayerName(value);
+  return estimatedPlayerNameWidth(playerName) > PLAYER_NAME_WIDTH_THRESHOLD;
+}
+
+export function getPlayerNameFontSize(value) {
+  const isLong = isLongPlayerName(value);
+  return isLong && REDUCE_LONG_PLAYER_NAME
+    ? LONG_PLAYER_NAME_FONT_SIZE
+    : PLAYER_NAME_FONT_SIZE;
+}
 
 function renderSvg(svg, fontFile) {
   const font = fontFile
@@ -91,14 +123,15 @@ export async function generateResultImage({
   staticOverlayPath = null,
 }) {
   const displayName = escapeXml(formatPlayerName(playerName));
+  const playerNameFontSize = getPlayerNameFontSize(playerName);
   const resultText = `${formatOrdinal(placement)} place`;
   const playerNameSvg = `
     <svg width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}"
          xmlns="http://www.w3.org/2000/svg">
       <g transform="translate(1826 0) scale(1.05 1)">
         <text x="0" y="378" text-anchor="end"
-              font-family="${FONT_FAMILY}" font-size="288"
-              fill="#d4d4d4" fill-opacity="0.73">${displayName}</text>
+              font-family="${FONT_FAMILY}" font-size="${playerNameFontSize}"
+              fill="#e5e5e5" fill-opacity="0.85">${displayName}</text>
       </g>
     </svg>
   `;

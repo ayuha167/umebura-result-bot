@@ -1,11 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 import sharp from 'sharp';
 import {
   formatOrdinal,
   formatPlayerName,
   generateResultImage,
+  getPlayerNameFontSize,
+  isLongPlayerName,
+  pickRandomBackground,
 } from '../src/result-image.js';
 
 const backgroundPath = fileURLToPath(
@@ -29,6 +35,34 @@ test('英語の順序数を正しく作る', () => {
 test('選手名を常に大文字で表示する', () => {
   assert.equal(formatPlayerName('Abadango'), 'ABADANGO');
   assert.equal(formatPlayerName('  alice & bob  '), 'ALICE & BOB');
+});
+
+test('長い選手名を判定しつつ、現在は全員288pxで描画する', () => {
+  assert.equal(getPlayerNameFontSize('ABADANGO'), 288);
+  assert.equal(isLongPlayerName('ABADANGO'), false);
+  assert.equal(isLongPlayerName('めたら/Metara'), true);
+  assert.equal(isLongPlayerName('酷く瘦せ細ったガムート'), true);
+  assert.equal(getPlayerNameFontSize('めたら/Metara'), 288);
+  assert.equal(getPlayerNameFontSize('酷く瘦せ細ったガムート'), 288);
+});
+
+test('背景候補は指定ディレクトリ直下のみでmaterial配下を除外する', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'result-images-'));
+  try {
+    await mkdir(join(directory, 'material'));
+    await writeFile(join(directory, 'allowed.png'), '');
+    await writeFile(join(directory, 'material', 'ignored.png'), '');
+
+    const selected = await pickRandomBackground({
+      directory,
+      fallbackPath: 'fallback.png',
+    });
+
+    assert.equal(selected.backgroundPath, join(directory, 'allowed.png'));
+    assert.equal(selected.useStaticOverlay, true);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 });
 
 test('1920 x 1080 pxのPNG順位画像を生成する', async () => {

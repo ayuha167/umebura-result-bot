@@ -3,8 +3,8 @@ import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 export const resultCommand = new SlashCommandBuilder()
   .setName('result')
   .setNameLocalizations({ ja: 'result' })
-  .setDescription('ウメブラSP12の最終順位を調べます')
-  .setDescriptionLocalizations({ ja: 'ウメブラSP12の最終順位を調べます' })
+  .setDescription('ウメブラSP13の最終順位を調べます')
+  .setDescriptionLocalizations({ ja: 'ウメブラSP13の最終順位を調べます' })
   .addStringOption((option) =>
     option
       .setName('account')

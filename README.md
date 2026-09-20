@@ -1,8 +1,8 @@
-# ウメブラ結果画像Bot（順位テキスト版）
+# ウメブラ結果画像Bot
 
 Discordの `/result account:<選手名またはstart.ggプロフィールURL>` に対し、
-ウメブラSP12 Singlesの最終順位を文字と画像で返します。
-画像は `assets/result-images` からランダムに背景を選び、
+ウメブラSP13 Singlesの最終順位を文字と画像で返します。
+画像は `RESULT_IMAGES_DIR` で指定したディレクトリ直下からランダムに背景を選び、
 画像がない場合は `assets/YourResults01.png` を背景に、
 `I got Nth place` を中央に合成した1920 x 1080 pxのPNGです。
 初回起動時だけstart.gg APIから全参加者を取得し、
@@ -42,7 +42,9 @@ npm run preview-result -- 13
 `.env`は`.gitignore`対象です。Tokenをチャットへ貼ったりGitへコミットしたり
 しないでください。
 
-背景画像を追加する場合は `assets/result-images` に配置してください。
+背景画像を追加する場合は `RESULT_IMAGES_DIR` で指定したディレクトリ直下に配置してください。
+サブディレクトリ内の画像（例: `material/`）は候補に含まれません。
+このローカル構成では `.env` に `RESULT_IMAGES_DIR=../YourResults/images` を設定します。
 文字フォントは `RESULT_FONT_FILE` で指定したTTFファイルを使って描画します。
 Railwayではリポジトリ内の `assets/GenEiNuGothic-EB.ttf` を指定してください。
 
