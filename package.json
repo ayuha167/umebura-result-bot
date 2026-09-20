@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Discord bot that returns Umebura SP12 placements from start.gg",
+  "description": "Discord bot that returns Umebura SP13 placements from start.gg",
   "scripts": {
     "register": "node src/register-commands.js",
     "refresh-standings": "node src/refresh-standings.js",

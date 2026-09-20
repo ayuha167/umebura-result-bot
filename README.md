@@ -45,6 +45,7 @@ npm run preview-result -- 13
 背景画像を追加する場合は `RESULT_IMAGES_DIR` で指定したディレクトリ直下に配置してください。
 サブディレクトリ内の画像（例: `material/`）は候補に含まれません。
 このローカル構成では `.env` に `RESULT_IMAGES_DIR=../YourResults/images` を設定します。
+リポジトリからデプロイする場合は `assets/result-images-sp13` を指定します。
 文字フォントは `RESULT_FONT_FILE` で指定したTTFファイルを使って描画します。
 Railwayではリポジトリ内の `assets/GenEiNuGothic-EB.ttf` を指定してください。
 
