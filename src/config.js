@@ -37,6 +37,13 @@ export function loadConfig(env = process.env) {
     resultImagesDirectory: resolve(
       env.RESULT_IMAGES_DIR?.trim() || 'assets/result-images',
     ),
+    day2ResultImagesDirectory: resolve(
+      env.RESULT_DAY2_IMAGES_DIR?.trim() || 'assets/result-images-sp13-day2',
+    ),
+    day2MaxPlacement: parsePositiveInteger(
+      env.RESULT_DAY2_MAX_PLACEMENT,
+      129,
+    ),
     resultStaticOverlayFile: resolve(
       env.RESULT_STATIC_OVERLAY_FILE?.trim() ||
         'assets/YourResults01-overlay.png',
@@ -49,5 +56,12 @@ export function loadConfig(env = process.env) {
     ),
     openaiApiKey: env.OPENAI_API_KEY?.trim() || null,
     openaiModel: env.OPENAI_MODEL?.trim() || 'gpt-5.6-luna',
+    refreshStandingsOnStart:
+      env.REFRESH_STANDINGS_ON_START?.trim().toLowerCase() === 'true',
   };
+}
+
+function parsePositiveInteger(value, fallback) {
+  const parsed = Number.parseInt(value ?? '', 10);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
 }

@@ -52,13 +52,19 @@ export async function refreshStandingsFile({
 }
 
 export async function ensureStandingsFile(options) {
-  try {
-    const data = await loadStandingsFile(options.filePath);
-    if (data.eventSlug === options.eventSlug) {
-      return { data, created: false };
-    }
+  if (options.forceRefresh) {
+    console.log('順位ファイルを強制更新します。');
+  }
 
-    console.log('指定大会が変更されたため、順位ファイルを更新します。');
+  try {
+    if (!options.forceRefresh) {
+      const data = await loadStandingsFile(options.filePath);
+      if (data.eventSlug === options.eventSlug) {
+        return { data, created: false };
+      }
+
+      console.log('指定大会が変更されたため、順位ファイルを更新します。');
+    }
   } catch (error) {
     if (error?.code !== 'ENOENT') throw error;
   }

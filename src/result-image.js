@@ -54,26 +54,47 @@ function renderSvg(svg, fontFile) {
   );
 }
 
-export async function pickRandomBackground({ directory, fallbackPath }) {
+async function listImageFiles(directory) {
   try {
     const entries = await readdir(directory, { withFileTypes: true });
-    const files = entries
+    return entries
       .filter(
         (entry) =>
           entry.isFile() && IMAGE_EXTENSIONS.has(extname(entry.name).toLowerCase()),
       )
       .map((entry) => join(directory, entry.name));
+  } catch {
+    return [];
+  }
+}
 
+export async function pickRandomBackground({
+  directory,
+  fallbackPath,
+  placement = null,
+  day2Directory = null,
+  day2MaxPlacement = 129,
+}) {
+  const useDay2Background =
+    day2Directory &&
+    Number.isInteger(placement) &&
+    placement >= 1 &&
+    placement <= day2MaxPlacement;
+  const directories = useDay2Background
+    ? [day2Directory, directory]
+    : [directory];
+
+  for (const candidateDirectory of directories) {
+    const files = await listImageFiles(candidateDirectory);
     if (files.length > 0) {
       return {
         backgroundPath: files[Math.floor(Math.random() * files.length)],
         useStaticOverlay: true,
       };
     }
-  } catch {
-    // Fall back to the bundled template when the optional image directory is unavailable.
   }
 
+  // Fall back to the bundled template when the optional image directory is unavailable.
   return { backgroundPath: fallbackPath, useStaticOverlay: false };
 }
 

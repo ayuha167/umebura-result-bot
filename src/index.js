@@ -42,6 +42,7 @@ const initialStandings = await ensureStandingsFile({
   eventSlug: config.startggEventSlug,
   tournamentLabel: config.tournamentLabel,
   filePath: config.standingsFile,
+  forceRefresh: config.refreshStandingsOnStart,
 });
 console.log(
   initialStandings.created
@@ -72,6 +73,9 @@ async function handleResult(interaction) {
     const background = await pickRandomBackground({
       directory: config.resultImagesDirectory,
       fallbackPath: config.resultBackgroundFile,
+      placement: result.placement,
+      day2Directory: config.day2ResultImagesDirectory,
+      day2MaxPlacement: config.day2MaxPlacement,
     });
     const image = await generateResultImage({
       placement: result.placement,

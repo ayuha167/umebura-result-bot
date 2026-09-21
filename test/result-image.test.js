@@ -48,10 +48,12 @@ test('長い選手名を判定しつつ、現在は全員288pxで描画する', 
 
 test('背景候補は指定ディレクトリ直下のみでmaterial配下を除外する', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'result-images-'));
+  const day2Directory = await mkdtemp(join(tmpdir(), 'result-images-day2-'));
   try {
     await mkdir(join(directory, 'material'));
     await writeFile(join(directory, 'allowed.png'), '');
     await writeFile(join(directory, 'material', 'ignored.png'), '');
+    await writeFile(join(day2Directory, 'day2.png'), '');
 
     const selected = await pickRandomBackground({
       directory,
@@ -60,8 +62,27 @@ test('背景候補は指定ディレクトリ直下のみでmaterial配下を除
 
     assert.equal(selected.backgroundPath, join(directory, 'allowed.png'));
     assert.equal(selected.useStaticOverlay, true);
+
+    const day2Selected = await pickRandomBackground({
+      directory,
+      day2Directory,
+      day2MaxPlacement: 129,
+      placement: 129,
+      fallbackPath: 'fallback.png',
+    });
+    assert.equal(day2Selected.backgroundPath, join(day2Directory, 'day2.png'));
+
+    const regularSelected = await pickRandomBackground({
+      directory,
+      day2Directory,
+      day2MaxPlacement: 129,
+      placement: 130,
+      fallbackPath: 'fallback.png',
+    });
+    assert.equal(regularSelected.backgroundPath, join(directory, 'allowed.png'));
   } finally {
     await rm(directory, { recursive: true, force: true });
+    await rm(day2Directory, { recursive: true, force: true });
   }
 });
 
