@@ -52,6 +52,17 @@ npm run preview-result -- 13
 文字フォントは `RESULT_FONT_FILE` で指定したTTFファイルを使って描画します。
 Railwayではリポジトリ内の `assets/GenEiNuGothic-EB.ttf` を指定してください。
 
+## ライセンスと画像素材
+
+Botのソースコードと説明文書は [MIT License](LICENSE) で公開しています。
+コードを改変して別の大会で運用できますが、再配布時は著作権・ライセンス表記を残してください。
+
+`assets/` 内の背景画像やフォントはMIT Licenseの対象外です。
+フォント「源暎Nuゴシック」はSIL Open Font License 1.1で配布されています。
+背景画像には、このリポジトリから別大会での利用許可を付与していません。
+別の大会で利用する際は、背景画像を権利を持つものに差し替えてください。
+詳しくは [アセットの利用条件](assets/README.md) を確認してください。
+
 ## Discordでの使い方
 
 ```text
